@@ -20,9 +20,9 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
-    - name: Checkout
+    - name: 准备完毕
       uses: actions/checkout@master
-    - name: Initialization environment
+    - name: 开始安装编译所需系统
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
@@ -30,13 +30,13 @@ jobs:
         sudo apt-get -y install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd fakeroot \
         cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
         pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev wget
-    - name: Clone source code
+    - name: 下载固件源码
       run: |
         git clone --depth=1 https://github.com/chongshengB/rt-n56u.git /opt/rt-n56u
         cd /opt/rt-n56u/toolchain-mipsel
         sh dl_toolchain.sh
         mkdir -p /opt/images/
-    - name: Build Firmware
+    - name: 编译固件
       env:
         TNAME: RM2100
       run: |
@@ -98,7 +98,7 @@ jobs:
         sudo ./clear_tree
         sudo ./build_firmware_modify $TNAME 0
         sudo mv -f images/*.trx /opt/images/
-    - name : Upload packages
+    - name : 上传固件
       uses: actions/upload-artifact@master
       if: always()
       with:
